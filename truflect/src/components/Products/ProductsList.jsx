@@ -44,6 +44,7 @@ const ProductsList = () => {
 
   
     const handleInputVlaue = async () => {
+      
        dispatch(setStartLoading({loader : true}))
       try {
           const response = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${searchData.searchValue}&json=true`)
