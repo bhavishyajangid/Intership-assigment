@@ -5,7 +5,7 @@ export default function SidebarItem({ icon: Icon, label, showLabel = false }) {
   return (
     <button
       className={`
-        p-3 rounded-xl hover:bg-[#232830] transition w-full 
+        p-3 rounded-xl hover:bg-[linear-gradient(to_right,_#00D1B233_0%,_#66666620_40%,_#66666600_100%)] transition w-full 
         flex items-center gap-3 text-sm font-medium text-white
         group-hover:flex cursor-pointer
       `}

@@ -7,34 +7,36 @@ import { RiUser6Line } from "react-icons/ri";
 const Allcards = () => {
     const cardData = [
   {
-    title: "Balance",
+    title: "Cash",
     value: "0",
     icon: MdOutlineAccountBalanceWallet,
   },
   {
-    title: "Active Direct",
+    title: "Crypto",
     value: "0",
     icon: RiUser6Line,
   },
   {
-    title: "Active Team",
+    title: "Spend In May",
     value: "0",
     icon: HiUserGroup,
   },
   {
-    title: "Packages",
+    title: "Grow",
     value: "0",
     icon: FiBox,
+    subTittle : "May 17 Next Payment"
   },
 ];
   return (
-     <div className="grid md:grid-cols-4 gap-4 max-xl:grid-cols-2 ">
+     <div className="grid  gap-4 grid-cols-2 grid-rows-2 ">
                 {cardData.map((card, index) => (
               <MiniCard
                 key={index}
                 title={card.title}
                 value={card.value}
                 icon={card.icon}
+                subTittle={card.subTittle}
               />
             ))}
               </div>

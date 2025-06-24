@@ -3,7 +3,7 @@ import CardHeading from './CardHeading';
 import OverViewCard from './OverViewCard';
 const Notification = ({ notifications = ["hh"] }) => {
   return (
-    <div className="bg-card-primary px-5 py-5 max-sm:px-3 rounded-2xl shadow-md">
+    <div className="bg-card-primary px-5 py-5 max-sm:px-3 rounded-2xl shadow-md max-sm:hidden">
       <CardHeading title='Notification' />
 
       <div className="flex flex-col gap-3 overflow-y-auto scrollbar-hide h-32">
