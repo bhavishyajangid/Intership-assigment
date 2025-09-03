@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Header, Sidebar } from '../../exports';
-import Footer from '../../components/Footer';
 
 const UserDashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
