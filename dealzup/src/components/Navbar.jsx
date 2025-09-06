@@ -12,7 +12,7 @@ const Navbar = () => {
     { name: "Contact us", path: "/contact" },
   ];
   return (
-    <nav className='w-full py-9   flex items-center justify-between  max-md:px-[30px] max-md:py-7'>
+    <nav className='w-full py-9   flex items-center justify-between   max-md:py-7'>
       <img className='w-[176px] max-sm:w-[170px] h-auto ' src="../../public/logo.png" alt="logo" />
 
     <div className="flex items-center gap-6 text-lg font-poppins max-[950px]:hidden text-[#1E1E1E]">
