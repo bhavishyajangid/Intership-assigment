@@ -14,6 +14,7 @@
 
 .heroSection{
     width: clamp(200px, 100%, 1500px);
+    margin: 0 auto;
 }
 
 
