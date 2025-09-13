@@ -19,9 +19,12 @@ const Signup = () => {
   const onsubmit = (data) => {
       if(!otpVerify) return alert('first verify otp ')
 
-
-        localStorage.setItem(data.email , JSON.stringify(data))
-      dispatch(setUser(data))
+        let newObj = {
+          ...data,
+          id : Math.floor(Math.random() * 50)
+        }
+        localStorage.setItem(data.email , JSON.stringify(newObj))
+      dispatch(setUser(newObj))
       toast.success("User Created Sucessfully")
   };
 

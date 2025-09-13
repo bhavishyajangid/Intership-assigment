@@ -1,10 +1,13 @@
 import React from 'react'
 import { AiFillDelete } from "react-icons/ai";
-const ChatRoomBox = ({item , selectedId , setSelectedId}) => {
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setSeletedRoom } from '../store/chatSlice';
+const ChatRoomBox = ({item}) => {
+  const dispatch = useDispatch()
+  const {selectedRoom} = useSelector(state => state.chatSlice)
   return (
      <div
-     onClick={() => {setSelectedId(item.id)}} className={`p-3 border border-gray-300 rounded-lg cursor-pointer  ${selectedId == item.id && 'shadow-lg  scale-105 z-10 bg-blue-100'} `}>
+     onClick={() => {dispatch(setSeletedRoom(item.id))}} className={`p-3 border border-gray-300 rounded-lg cursor-pointer  ${selectedRoom == item.id && 'shadow-lg  scale-105 z-10 bg-blue-100'} `}>
                 <div className='flex justify-between'>
                <span className='text-[clamp(1rem,1.3vw,4rem)] font-semibold'>{item.title}</span>
                <span className='text-sm font-semibold text-green-400'>active</span>

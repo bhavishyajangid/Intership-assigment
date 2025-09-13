@@ -2,7 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { IoIosAdd } from "react-icons/io";
 import Input from "../../../components/Input";
 import { CiMicrophoneOn } from "react-icons/ci";
+import { IoMdSend } from "react-icons/io";
+import { useSelector } from "react-redux";
 const ChatBox = () => {
+  const {selectedRoom , chatRooms} = useSelector(state => state.chatSlice)
   const [message, setMessage] = useState([
     {
       sender: "ai",
@@ -22,6 +25,8 @@ const ChatBox = () => {
     "I’ll need a second... okay, done ✅",
     "Wow, that’s deep! Let’s dive in 🧠",
   ];
+  console.log(chatRooms[selectedRoom - 1]?.title);
+  
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -83,7 +88,7 @@ const ChatBox = () => {
   return (
     <div className="w-full max-h-screen bg-white">
       <div className="w-full  px-8 py-3 bg-purple-300">
-        <h1 className="text-[18px] font-semibold ">Ai research </h1>
+        <h1 className="text-[18px] font-semibold ">{chatRooms[selectedRoom - 1]?.title || 'AI'}</h1>
         <p className="text-sm text-green-500 font-semibold">
           <span className="inline-block w-[5px] h-[5px] rounded-full bg-green-500"></span>{" "}
           online
@@ -112,6 +117,8 @@ const ChatBox = () => {
 
       {/* // chat input  */}
       <div className="w-11/12 overflow-hidden  border border-gray-400 rounded-4xl px-5 py-3 mx-auto">
+      <div className="flex">
+
         <textarea
           ref={inputRef}
           onKeyDown={(e) => {
@@ -123,6 +130,8 @@ const ChatBox = () => {
           name=""
           id=""
         ></textarea>
+        <IoMdSend onClick={() => {handleSend()}} className="text-2xl text-gray-500 ml-3" />
+      </div>
 
         <div className="flex justify-between items-center">
           <button>
