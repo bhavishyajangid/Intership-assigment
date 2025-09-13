@@ -1,9 +1,11 @@
 import { useState , useEffect } from 'react'
 import './App.css'
-import {Button} from '@mui/material'
+ import { ToastContainer, toast } from 'react-toastify';
 import Signup from './pages/auth/Signup'
 import { useDispatch } from 'react-redux'
 import { setCoutryCode } from './store/userSlice'
+import Login from './pages/auth/Login';
+import Home from './pages/Dashboard/Home/Home';
 function App() {
   const [loader , setLoader] = useState(true)
   const dispatch  = useDispatch()
@@ -30,11 +32,11 @@ function App() {
 
   return (
     <>
-      <div className ="bg-pink-50 h-screen w-screen flex px-3 ">
+      <div className ="bg-pink-50 h-screen w-screen flex px-3 md:px-0 ">
 {
-  !loader && <Signup/>
+  !loader && <Home/>
 }
-    
+    <ToastContainer />
       </div>
     </>
   )

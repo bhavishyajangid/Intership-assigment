@@ -1,0 +1,32 @@
+import { useState , useEffect , useRef} from "react";
+import { useSelector } from "react-redux";
+
+export function useOtpTimer(startTime = 10) {
+  const [second, setSecond] = useState(startTime);
+  const {otpSend , resend} = useSelector(state => state.userSlice)
+  const intervalRef = useRef(null);
+  const firstRender = useRef(true);
+  
+ 
+  
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    setSecond(startTime);
+  }, [otpSend, resend]);
+
+  useEffect(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    if (second === 0) return;
+
+    intervalRef.current = setInterval(() => {
+      setSecond((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(intervalRef.current);
+  }, [otpSend, resend , second]); // Set up on otpSend or resend
+
+  return second 
+}
