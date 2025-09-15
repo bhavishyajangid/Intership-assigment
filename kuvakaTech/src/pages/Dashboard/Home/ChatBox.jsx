@@ -3,19 +3,19 @@ import { IoIosAdd } from "react-icons/io";
 import Input from "../../../components/Input";
 import { CiMicrophoneOn } from "react-icons/ci";
 import { IoMdSend } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import userSlice, { addMessage, setUser } from "../../../store/userSlice";
+import { toast } from "react-toastify";
 const ChatBox = () => {
-  const {selectedRoom , chatRooms} = useSelector(state => state.chatSlice)
-  const [message, setMessage] = useState([
-    {
-      sender: "ai",
-      text: "Hello 👋 I'm Gemini. Ask me anything!",
-      time: new Date(),
-    },
-  ]);
+  const dispatch = useDispatch()
+  const {currentUser} = useSelector(state => state.userSlice)
+  const {selectedRoom } = useSelector(state => state.chatSlice)
+  const [message, setMessage] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [image , setImage] = useState(null)
+  const [file , setFile]  = useState(null)
   const inputRef = useRef(null);
-  const bottomRef = useRef(null);
+  const bottomRef = useRef(null); 
 
   const aiReplies = [
     "🤔 Let me think about that...",
@@ -25,25 +25,46 @@ const ChatBox = () => {
     "I’ll need a second... okay, done ✅",
     "Wow, that’s deep! Let’s dive in 🧠",
   ];
-  console.log(chatRooms[selectedRoom - 1]?.title);
+
   
+  const handleFileChange = (e) => {
+    const file = e.target.file[0]
+
+    if(!file) return 
+
+    setFile(file)
+    setImage(URL.createObjectURL(file))
+  }
+  
+ useEffect(() => {
+
+  if (selectedRoom >= 0 && currentUser?.chatRooms?.[selectedRoom]) {
+    setMessage([...currentUser.chatRooms[selectedRoom]?.messages] || []);
+  }
+}, [selectedRoom, currentUser]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
 
   const formateDate = (date) => {
-    date.toLocaleTimeString([], { hours: "2-digit", minute: "2-digit" });
+     return  new Date(date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  const handleSend = () => {
+  const handleSend = async() => {
     if (!inputRef.current.value.trim()) return;
+   
+
+
 
     const userMessage = {
       sender: "user",
-      text: inputRef.current.value,
-      time: new Date(),
+      text: inputRef.current.value || "",
+      time: new Date().toISOString(),
     };
+ console.log(currentUser , currentUser.chatRooms[selectedRoom]);
+ 
+    
 
     setMessage((prev) => [...prev, userMessage]);
     inputRef.current.value = "";
@@ -56,10 +77,39 @@ const ChatBox = () => {
       const randomReplay =
         aiReplies[Math.floor(Math.random() * aiReplies.length)];
 
-      const aiMessage = { sender: "ai", text: randomReplay, time: new Date() };
+      const aiMessage = { sender: "ai", text: randomReplay, time: new Date().toISOString() };
 
+    
       setMessage((prev) => [...prev, aiMessage]);
       setIsTyping(false);
+      
+
+      const updatedUser = {
+  ...currentUser,
+  chatRooms: currentUser.chatRooms.map((room, idx) =>
+    idx === selectedRoom
+      ? { ...room, messages: [...room.messages, userMessage , aiMessage] }
+      : room
+  )
+};
+
+dispatch(setUser(updatedUser));
+localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+
+
+      
+      let users = JSON.parse(localStorage.getItem('users'))
+        
+       const idx = users.findIndex(u => u.id == currentUser.id)
+
+       if(idx !== -1){
+        users[idx] = updatedUser
+       }else{
+        users.push(updatedUser)
+       }
+
+       localStorage.setItem('users' , JSON.stringify(users))
+
     }, [delay]);
   };
 
@@ -85,10 +135,12 @@ const ChatBox = () => {
       }
     }
   };
+
+
   return (
     <div className="w-full max-h-screen bg-white">
       <div className="w-full  px-8 py-3 bg-purple-300">
-        <h1 className="text-[18px] font-semibold ">{chatRooms[selectedRoom - 1]?.title || 'AI'}</h1>
+        <h1 className="text-[18px] font-semibold ">{currentUser?.chatRooms?.[selectedRoom]?.title || "AI"}</h1>
         <p className="text-sm text-green-500 font-semibold">
           <span className="inline-block w-[5px] h-[5px] rounded-full bg-green-500"></span>{" "}
           online
@@ -98,8 +150,8 @@ const ChatBox = () => {
       {/* chat box message */}
       <div className=" max-h-[65vh] h-full overflow-y-auto scrollbar-hide bg-white p-4 space-y-3">
          {
-            message.map((item) => (
-                <div className={`px-3 py-1 bg-gray-200 rounded-lg w-fit ${item.sender === 'user' ? "ml-auto bg-blue-200 text-right" : "bg-gray-200 text-left"}`}>
+            message?.map((item , index) => (
+                <div key={index} className={`px-3 py-1 bg-gray-200 rounded-lg w-fit ${item.sender === 'user' ? "ml-auto bg-blue-200 text-right" : "bg-gray-200 text-left"}`}>
              <p>{item.text}</p>
              <span className="text-xs text-gray-500">{formateDate(item.time)}</span>
             </div>
@@ -147,3 +199,12 @@ const ChatBox = () => {
 };
 
 export default ChatBox;
+
+const toBase64 = (file) => {
+   new Promise((resolve , reject) => {
+     const reader = new FileReader()
+     reader.readAsDataURL(file)
+     reader .onload =() => resolve(reader.result)
+     reader.onerror = reject
+   })
+}

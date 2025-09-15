@@ -6,8 +6,28 @@ import Input from "../../components/Input";
 import { setOtpSend, setUser } from "../../store/userSlice";
 import OtpVerifyCom from "../../components/OtpVerifyCom";
 import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router";
+
+let rooms = [
+  {
+      id: 0,
+      title: "Frontend Development",
+      lastMessage: "I fixed the signup form issue 🎉",
+      updatedAt: "2025-09-11T18:10:00Z",
+      messages : []
+    } ,
+  {
+      id: 1,
+      title: "Daily Standup",
+      lastMessage: "Today's meeting starts in 15 mins",
+      updatedAt: "2025-09-10T09:00:00Z",
+      messages : []
+    }
+]
+
 const Signup = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
    const {otpSend , otpVerify} = useSelector(state => state.userSlice)
   const {
     register,
@@ -21,11 +41,25 @@ const Signup = () => {
 
         let newObj = {
           ...data,
-          id : Math.floor(Math.random() * 50)
+          id : Date.now(),
+          chatRooms : [...rooms]
+}
+        
+
+    
+        let users = JSON.parse(localStorage.getItem('users')) || []
+
+
+        if(users?.find(user => user.email == newObj.email)){
+            return  toast.error("Email is already register ! Try another email ")
         }
-        localStorage.setItem(data.email , JSON.stringify(newObj))
-      dispatch(setUser(newObj))
+
+        users.push(newObj)
+
+        localStorage.setItem('users' , JSON.stringify(users))
       toast.success("User Created Sucessfully")
+      navigate('/login')
+
   };
 
   const handleOtpSend = () => {
@@ -109,9 +143,9 @@ const Signup = () => {
       <div className="text-center text-xs mt-3">
         <p className=" text-gray-600">
           Already have an account?
-          {/* <Link to="/login"> */}
+          <Link to="/login">
           <span className="text-blue-500 hover:underline"> Log in</span>
-          {/* </Link> */}
+          </Link>
         </p>
       </div>
     </div>

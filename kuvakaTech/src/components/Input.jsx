@@ -28,7 +28,7 @@ const Input = forwardRef(({ placeholder , className = ""   , type , otpOpen  , r
             </select>
         }
         
-        <input ref={ref}  type={type} {...props} placeholder={placeholder} className='text-sm placeholder:text-base ml-2 w-full h-full outline-none'/>
+        <input ref={ref} type={type} {...props} placeholder={placeholder} className='text-sm placeholder:text-base ml-2 w-full h-full outline-none'/>
 
  
 

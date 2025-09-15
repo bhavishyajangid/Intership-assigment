@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../store/userSlice';
+import { Link, useNavigate } from 'react-router';
 const Login = () => {
     const {
     register,
@@ -14,19 +15,18 @@ const Login = () => {
   } = useForm();
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const onsubmit = (data) => {
-    let userData =  JSON.parse(localStorage.getItem(data.email))
-    if(userData){
-         if(data.password == userData.password){
-             toast.success('Login Sucessfully')
-             dispatch(setUser(data))
-         }else{
-            toast.error('Incorrect Password')
-         }
-    }else{
-        toast.error('User Not Found ')
-    }
+     let users = JSON.parse(localStorage.getItem('users' || '[]'))
+     const user = users.find(u => u.email === data.email)
+
+     if(!user) return toast.error('User not found')
+      if(user.password !== data.password) return toast.error('Invalid Password')
+
+    localStorage.setItem('currentUser' , JSON.stringify(user))
+    navigate('/home')
+    toast.success('Login Sucessfully')
   }
 
   
@@ -66,9 +66,9 @@ const Login = () => {
    <div className="text-center text-xs mt-3">
         <p className=" text-gray-600">
           Already have an account?
-          {/* <Link to="/login"> */}
+          <Link to="/">
           <span className="text-blue-500 hover:underline"> Sign up</span>
-          {/* </Link> */}
+          </Link>
         </p>
       </div>
  </div>

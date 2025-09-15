@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { setCoutryCode } from './store/userSlice'
 import Login from './pages/auth/Login';
 import Home from './pages/Dashboard/Home/Home';
+import { Outlet } from 'react-router';
 function App() {
   const [loader , setLoader] = useState(true)
   const dispatch  = useDispatch()
@@ -33,9 +34,9 @@ function App() {
   return (
     <>
       <div className ="bg-pink-50 h-screen w-screen flex px-3 md:px-0 ">
-{
-  !loader && <Home/>
-}
+      {/* <Signup/> */}
+      {/* <Home/> */}
+      <Outlet/>
     <ToastContainer />
       </div>
     </>

@@ -5,7 +5,7 @@ import { createSlice } from "@reduxjs/toolkit"
 const userSlice = createSlice({
     name : 'auth' ,
     initialState : {
-        user : {},
+        currentUser : {},
         isLogin : false , 
         countryCode : [],
         otpSend : false,
@@ -15,7 +15,7 @@ const userSlice = createSlice({
     },
     reducers : {
         setUser : (state , action) => {
-             state.user = action.payload 
+             state.currentUser = action.payload 
              state.isLogin = true
         },
        setCoutryCode : (state , action) => {
@@ -31,9 +31,15 @@ const userSlice = createSlice({
        },
        setOtpVerify : (state , action) => {
         state.otpVerify = action.payload
+       },
+       setUserUpdate : (state , action) =>{
+         state.currentUser = action.payload
+       },
+       addMessage : (state , action) => {
+          state.currentUser 
        }
     }
 })
 
-export const {setCoutryCode , setOtpSend , setUser , setResend , setOtpVerify} = userSlice.actions
+export const {setCoutryCode , setOtpSend , setUser , setResend , setOtpVerify , setUserUpdate , addMessage} = userSlice.actions
 export default userSlice
