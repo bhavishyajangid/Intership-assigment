@@ -1,34 +1,33 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import { setOtpSend, setUser } from "../../store/userSlice";
 import OtpVerifyCom from "../../components/OtpVerifyCom";
-import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router";
+import { setOtpSend } from "../../store/userSlice";
 
 let rooms = [
   {
-      id: 0,
-      title: "Frontend Development",
-      lastMessage: "I fixed the signup form issue 🎉",
-      updatedAt: "2025-09-11T18:10:00Z",
-      messages : []
-    } ,
+    id: 0,
+    title: "Frontend Development",
+    lastMessage: "I fixed the signup form issue 🎉",
+    updatedAt: "2025-09-11T18:10:00Z",
+    messages: [],
+  },
   {
-      id: 1,
-      title: "Daily Standup",
-      lastMessage: "Today's meeting starts in 15 mins",
-      updatedAt: "2025-09-10T09:00:00Z",
-      messages : []
-    }
-]
+    id: 1,
+    title: "Daily Standup",
+    lastMessage: "Today's meeting starts in 15 mins",
+    updatedAt: "2025-09-10T09:00:00Z",
+    messages: [],
+  },
+];
 
 const Signup = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-   const {otpSend , otpVerify} = useSelector(state => state.userSlice)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { otpSend, otpVerify } = useSelector((state) => state.userSlice);
   const {
     register,
     handleSubmit,
@@ -37,37 +36,31 @@ const Signup = () => {
   } = useForm();
 
   const onsubmit = (data) => {
-      if(!otpVerify) return alert('first verify otp ')
+    if (!otpVerify) return alert("first verify otp ");
 
-        let newObj = {
-          ...data,
-          id : Date.now(),
-          chatRooms : [...rooms]
-}
-        
+    let newObj = {
+      ...data,
+      id: Date.now(),
+      chatRooms: [...rooms],
+    };
 
-    
-        let users = JSON.parse(localStorage.getItem('users')) || []
+    let users = JSON.parse(localStorage.getItem("users")) || [];
 
+    if (users?.find((user) => user.email == newObj.email)) {
+      return toast.error("Email is already register ! Try another email ");
+    }
 
-        if(users?.find(user => user.email == newObj.email)){
-            return  toast.error("Email is already register ! Try another email ")
-        }
+    users.push(newObj);
 
-        users.push(newObj)
-
-        localStorage.setItem('users' , JSON.stringify(users))
-      toast.success("User Created Sucessfully")
-      navigate('/login')
-
+    localStorage.setItem("users", JSON.stringify(users));
+    toast.success("User Created Sucessfully");
+    navigate("/login");
   };
 
   const handleOtpSend = () => {
-     dispatch(setOtpSend())
-     toast.success('Otp Generated sucessfully')
-  }
-
-  
+    dispatch(setOtpSend());
+    toast.success("Otp Generated sucessfully");
+  };
 
   return (
     <div className="max-w-sm  w-96  m-auto p-5 bg-gray-200 rounded-lg">
@@ -126,25 +119,31 @@ const Signup = () => {
             })}
             type={"tel"}
           />
-          {
-            (watch("tel")?.length === 10 && !otpSend && !otpVerify)  && <div className="flex justify-end items-center"> <span onClick={() => {handleOtpSend()}} className="text-[13px] w-fit cursor-pointer text-right text-orange-400 mr-4 mt-1">
-            Verify
-          </span>
-          </div>
-          }
-          
+          {watch("tel")?.length === 10 && !otpSend && !otpVerify && (
+            <div className="flex justify-end items-center">
+              {" "}
+              <span
+                onClick={() => {
+                  handleOtpSend();
+                }}
+                className="text-[13px] w-fit cursor-pointer text-right text-orange-400 mr-4 mt-1"
+              >
+                Verify
+              </span>
+            </div>
+          )}
         </div>
 
-        {(otpSend && !otpVerify )&& (
-          <OtpVerifyCom/>
-        )}
+        {otpSend && !otpVerify && <OtpVerifyCom />}
+
+        
         <Button className="mt-10" label={"Sign up"} />
       </form>
       <div className="text-center text-xs mt-3">
         <p className=" text-gray-600">
           Already have an account?
           <Link to="/login">
-          <span className="text-blue-500 hover:underline"> Log in</span>
+            <span className="text-blue-500 hover:underline"> Log in</span>
           </Link>
         </p>
       </div>

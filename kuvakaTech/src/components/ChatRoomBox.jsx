@@ -1,9 +1,12 @@
 import { AiFillDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { setSeletedRoom } from "../store/chatSlice";
-import { setUserUpdate } from "../store/userSlice";
+import { decreaseId, setUserUpdate } from "../store/userSlice";
+import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router";
 const ChatRoomBox = ({ item }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.userSlice);
   const { selectedRoom } = useSelector((state) => state.chatSlice);
 
@@ -11,8 +14,6 @@ const ChatRoomBox = ({ item }) => {
     // take the data from local storage
     const users = JSON.parse(localStorage.getItem("users"));
     const loginUser = JSON.parse(localStorage.getItem("currentUser"));
-
-    
 
     // update the chatrooms
     let updatedChatRooms = loginUser.chatRooms.filter((item) => item.id !== id);
@@ -27,7 +28,7 @@ const ChatRoomBox = ({ item }) => {
     let idx = users.findIndex((u) => u.id == currentUser.id);
 
     if (idx !== -1) {
-       // update it
+      // update it
       users[idx] = updatedCurrentUser;
     }
 
@@ -36,11 +37,24 @@ const ChatRoomBox = ({ item }) => {
     localStorage.setItem("currentUser", JSON.stringify(updatedCurrentUser));
 
     dispatch(setUserUpdate(updatedCurrentUser));
+    dispatch(decreaseId())
+    toast.success("Room deleted sucessfully");
   };
+
+  // navigate to the chatbox
+  const handleNavigate = (id) => {
+    if (window.innerWidth < 768) {
+      navigate(`/chat`);
+      dispatch(setSeletedRoom(id));
+    } else {
+      dispatch(setSeletedRoom(id));
+    }
+  };
+
   return (
     <div
       onClick={() => {
-        dispatch(setSeletedRoom(item.id));
+        handleNavigate(item.id);
       }}
       className={`p-3 border border-gray-300 rounded-lg cursor-pointer  ${
         selectedRoom == item.id && "shadow-lg  scale-105 z-10 bg-blue-100"

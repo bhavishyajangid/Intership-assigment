@@ -1,16 +1,18 @@
-import { useState , useEffect } from 'react'
-import './App.css'
- import { ToastContainer, toast } from 'react-toastify';
-import Signup from './pages/auth/Signup'
-import { useDispatch } from 'react-redux'
-import { setCoutryCode } from './store/userSlice'
-import Login from './pages/auth/Login';
-import Home from './pages/Dashboard/Home/Home';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router';
+import './App.css';
+import { setCoutryCode } from './store/userSlice';
+import Loader from './components/Loader';
 function App() {
   const [loader , setLoader] = useState(true)
   const dispatch  = useDispatch()
 
+  useEffect(() => {
+    let user = JSON.parse(localStorage.getItem("currentUser"));
+    if (user) dispatch(setUser(user));
+    setLoader(false)
+  }, []);
 
   useEffect(() => {
     const fetchCountryCode = async() => {
@@ -29,15 +31,12 @@ function App() {
   } , [])
 
 
-
+ if(loader)return <Loader/>
 
   return (
     <>
       <div className ="bg-pink-50 h-screen w-screen flex px-3 md:px-0 ">
-      {/* <Signup/> */}
-      {/* <Home/> */}
       <Outlet/>
-    <ToastContainer />
       </div>
     </>
   )
