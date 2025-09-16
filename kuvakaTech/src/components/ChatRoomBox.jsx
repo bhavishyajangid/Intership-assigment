@@ -1,10 +1,11 @@
 import { AiFillDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { setSeletedRoom } from "../store/chatSlice";
-import { decreaseId, setUserUpdate } from "../store/userSlice";
+import { setUserUpdate } from "../store/userSlice";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router";
-const ChatRoomBox = ({ item }) => {
+import { memo } from "react";
+const ChatRoomBox = ({ item , index }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.userSlice);
@@ -37,8 +38,8 @@ const ChatRoomBox = ({ item }) => {
     localStorage.setItem("currentUser", JSON.stringify(updatedCurrentUser));
 
     dispatch(setUserUpdate(updatedCurrentUser));
-    dispatch(decreaseId())
     toast.success("Room deleted sucessfully");
+    navigate('/home')
   };
 
   // navigate to the chatbox
@@ -54,10 +55,10 @@ const ChatRoomBox = ({ item }) => {
   return (
     <div
       onClick={() => {
-        handleNavigate(item.id);
+        handleNavigate(index);
       }}
       className={`p-3 border border-gray-300 rounded-lg cursor-pointer  ${
-        selectedRoom == item.id && "shadow-lg  scale-105 z-10 bg-blue-100"
+        selectedRoom == index && "shadow-lg  scale-105 z-10 bg-blue-100"
       } `}
     >
       <div className="flex justify-between">
@@ -82,4 +83,4 @@ const ChatRoomBox = ({ item }) => {
   );
 };
 
-export default ChatRoomBox;
+export default memo(ChatRoomBox) 

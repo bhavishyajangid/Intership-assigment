@@ -1,4 +1,5 @@
 
+import { memo } from "react";
 import { CiMicrophoneOn } from "react-icons/ci";
 import { IoIosAdd } from "react-icons/io";
 const FileInput = ({handleFileChange}) => {
@@ -20,4 +21,4 @@ const FileInput = ({handleFileChange}) => {
   )
 }
 
-export default FileInput
+export default memo(FileInput) 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { IoCopy } from "react-icons/io5";
 import { toast } from 'react-toastify';
 const Message = ({item}) => {
@@ -58,4 +58,4 @@ const Message = ({item}) => {
   )
 }
 
-export default Message
+export default memo(Message) 

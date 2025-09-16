@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,17 +6,17 @@ import { toast } from 'react-toastify';
 import ChatRoomBox from '../../components/ChatRoomBox';
 import CreateRoom from '../../components/CreateRoom';
 import Input from '../../components/Input';
-import { increaseId, setUserUpdate } from '../../store/userSlice';
+import { setUserUpdate } from '../../store/userSlice';
 const ChatRooms = () => {
  
   
   const dispatch = useDispatch()
-  const {currentUser , id} = useSelector(state => state.userSlice)
+  const {currentUser} = useSelector(state => state.userSlice)
   const [createRoom , setCreateRoom] = useState(false)
   const [value , setValue] = useState('')
   const [filterRooms , setFilterRooms] = useState(currentUser?.chatRooms || [])
   const [searchBarOpen , setSearchBarOpen] = useState(false)
-  const idTake = useRef(2)
+
    const {
       register,
       handleSubmit,
@@ -25,18 +25,20 @@ const ChatRooms = () => {
       formState: { errors },
     } = useForm();
 
-    const onsubmit = (data) => {
+   
+    const onsubmit = useCallback((data) =>  {
          
-      console.log(idTake.current , 'id');
+     
+   
+    
       
           let obj = {
              ...data , 
-             id: id ,
+             id: new Date().toISOString() ,
              lastMessage : "Hi",
              updatedAt : new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
              messages : []
           }
-          
           // fetch data from localstorage
           let users = JSON.parse(localStorage.getItem('users'))
            let loginUser = JSON.parse(localStorage.getItem('currentUser'))
@@ -57,12 +59,14 @@ const ChatRooms = () => {
           localStorage.setItem('currentUser' , JSON.stringify(updatedUser))
        
           dispatch(setUserUpdate(updatedUser))
-          dispatch(increaseId())
+         
+          
           setCreateRoom(false)
           reset()
           toast.success('Room Created Sucessfully')
-    }
+    } , [])
 
+    
 
     // search the room by title
     useEffect(() => {
@@ -118,10 +122,11 @@ const ChatRooms = () => {
         <h1 className="font-medium text-center mb-2 mt-3">Active Chat Room</h1>
 
         <div className="flex flex-col gap-3 max-h-[82vh] overflow-y-scroll scrollbar-hide">
-          {filterRooms?.map((item) => (
+          {filterRooms?.map((item , index) => (
             <ChatRoomBox
               key={item.id}
               item={item}
+              index={index}
               />
               
           ))}

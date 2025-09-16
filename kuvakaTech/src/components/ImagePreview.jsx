@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { RxCross2 } from "react-icons/rx";
 import { IoMdSend } from "react-icons/io";
 const ImagePreview = ({image , setImage , setFile}) => {
@@ -22,4 +22,4 @@ const ImagePreview = ({image , setImage , setFile}) => {
   )
 }
 
-export default ImagePreview
+export default memo(ImagePreview) 

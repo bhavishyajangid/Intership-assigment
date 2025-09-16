@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-toastify";
@@ -6,7 +7,8 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import OtpVerifyCom from "../../components/OtpVerifyCom";
 import { setOtpSend } from "../../store/userSlice";
-
+import { setCoutryCode } from "../../store/userSlice";
+import Loader from "../../components/Loader";
 let rooms = [
   {
     id: 0,
@@ -25,6 +27,7 @@ let rooms = [
 ];
 
 const Signup = () => {
+  const [loader , setLoader] = useState(true)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { otpSend, otpVerify } = useSelector((state) => state.userSlice);
@@ -34,6 +37,23 @@ const Signup = () => {
     watch,
     formState: { errors },
   } = useForm();
+
+useEffect(() => {
+    const fetchCountryCode = async() => {
+      try { 
+         const  result = await fetch('https://restcountries.com/v3.1/all?fields=name,cca3,idd')
+         const res = await result.json()
+         dispatch(setCoutryCode(res || []))
+      } catch (error) {
+          console.log(error);
+      }finally{
+        setLoader(false)
+      }
+    }
+
+    fetchCountryCode()
+  } , [])
+
 
   const onsubmit = (data) => {
     if (!otpVerify) return alert("first verify otp ");
@@ -61,6 +81,10 @@ const Signup = () => {
     dispatch(setOtpSend());
     toast.success("Otp Generated sucessfully");
   };
+
+  if(loader){
+    return <Loader/>
+  }
 
   return (
     <div className="max-w-sm  w-96  m-auto p-5 bg-gray-200 rounded-lg">

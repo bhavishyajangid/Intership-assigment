@@ -71,7 +71,7 @@ const ChatBox = () => {
 
   // send the message
   const handleSend = async () => {
-    if (!selectedRoom) {
+    if (selectedRoom < 0) {
       toast.error("Select a chat room");
       return;
     }

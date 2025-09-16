@@ -15,7 +15,7 @@ const chatSlice = createSlice({
       state.chatOfUser = action.payload;
     },
     setRooms: (state, action) => {
-      state.chatRooms = action.payload;
+      state.chatRooms = state.id - 1;
     },
   },
 });

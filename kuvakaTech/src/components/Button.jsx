@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 const Button = ({type , label , className = '' ,  ...props}) => {
   return (
@@ -10,4 +10,4 @@ const Button = ({type , label , className = '' ,  ...props}) => {
   )
 }
 
-export default Button
+export default memo(Button) 

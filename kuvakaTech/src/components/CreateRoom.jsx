@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { useForm } from "react-hook-form";
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -25,4 +25,4 @@ const CreateRoom = ({onsubmit}) => {
   )
 }
 
-export default CreateRoom
+export default memo(CreateRoom) 

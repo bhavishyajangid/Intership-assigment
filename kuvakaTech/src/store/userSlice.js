@@ -10,7 +10,6 @@ const userSlice = createSlice({
     resend: false,
     otpVerify: false,
     generatedOtp: "",
-    id : 2
   },
   reducers: {
     setUser: (state, action) => {
@@ -41,12 +40,7 @@ const userSlice = createSlice({
     addMessage: (state, action) => {
       state.currentUser;
     },
-    increaseId : (state , action) => {
-       state.id = state.id + 1
-    },
-    decreaseId : (state , action) => {
-      state.id  = state.id - 1
-    }
+    
   },
 });
 
@@ -58,7 +52,5 @@ export const {
   setOtpVerify,
   setUserUpdate,
   addMessage,
-  increaseId,
-  decreaseId
 } = userSlice.actions;
 export default userSlice;

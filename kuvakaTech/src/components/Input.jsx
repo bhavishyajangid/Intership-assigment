@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect } from 'react'
+import React, { forwardRef, memo, useEffect } from 'react'
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useSelector } from 'react-redux';
 const Input = forwardRef(({ placeholder , className = ""   , type , otpOpen  , registerSelect, error  ,   ...props } , ref) => {
@@ -39,4 +39,4 @@ const Input = forwardRef(({ placeholder , className = ""   , type , otpOpen  , r
   )
 })
 
-export default Input
+export default memo(Input) 
