@@ -16,7 +16,7 @@ import { calculateTimeDiffrence } from "../utility/calculateTime";
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
 const SearchBox = () => {
-  const { oldInputVal, data, error, storedData , loading } = useSelector(
+  const { data, error, storedData , loading } = useSelector(
     (state) => state.weatherSlice
   );
   const dispatch = useDispatch();
@@ -24,6 +24,7 @@ const SearchBox = () => {
   const firstRender = useRef(true);
 
   useEffect(() => {
+
     if (firstRender.current) {
       firstRender.current = false;
       return;
@@ -35,8 +36,7 @@ const SearchBox = () => {
     }
 
     // prevent from empty or same search again
-    if (!val || val.trim().toLowerCase() === oldInputVal?.trim().toLowerCase()|| loading)
-      return;
+    if (!val || loading)  return;
 
     // check if the search city data is stored or not
     const inputVal = val.toLowerCase();

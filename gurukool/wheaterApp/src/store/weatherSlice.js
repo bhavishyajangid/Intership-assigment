@@ -8,20 +8,18 @@ const weatherSlice = createSlice({
     forecast: [],
     loading: true,
     useCurrentLocation: true,
-    oldInputVal: null,
     error: "",
     storedData : {}
   },
   reducers: {
     setData: (state, action) => {
+
       let data = action.payload;
+      
       let formateCityName = normalizeCityName(data.city?.name)
 
 
-      // save previous search city
-      if (formateCityName) {
-        state.oldInputVal = formateCityName.toLowerCase()
-      }
+      
 
 
       let obj = {
@@ -65,7 +63,6 @@ const weatherSlice = createSlice({
        const {data , forecaste} = action.payload
        state.data = data
        state.forecast = forecaste
-       state.oldInputVal = data.city.name
     },
     setRemoveStoredData : (state , action) => {
         delete state.storedData[action.payload];

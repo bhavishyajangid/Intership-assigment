@@ -13,7 +13,6 @@ import {
 } from "./store/weatherSlice";
 import { calculateTimeDiffrence } from "./utility/calculateTime";
 import { normalizeCityName } from "./utility/formateCityName";
-import { data } from "react-router-dom";
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
 function App() {
