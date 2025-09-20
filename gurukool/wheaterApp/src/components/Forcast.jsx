@@ -5,6 +5,7 @@ const Forcast = () => {
 
     const {forecast} = useSelector(state => state.weatherSlice)
 
+   
     
     
   return (

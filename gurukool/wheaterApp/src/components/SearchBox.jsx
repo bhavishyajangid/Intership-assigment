@@ -6,21 +6,22 @@ import {
   setData,
   setError,
   setLoader,
+  setRemoveStoredData,
+  setStoredData,
   setUseCurrentLocation,
 } from "../store/weatherSlice";
+import { toast } from "react-toastify";
+import { calculateTimeDiffrence } from "../utility/calculateTime";
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
 const SearchBox = () => {
-  const { oldInputVal, data, error } = useSelector(
+  const { oldInputVal, data, error, storedData } = useSelector(
     (state) => state.weatherSlice
   );
   const dispatch = useDispatch();
   const [val, setVal] = useState("");
   const firstRender = useRef(true);
-
-
-
 
   useEffect(() => {
     if (firstRender.current) {
@@ -37,6 +38,20 @@ const SearchBox = () => {
     if (!val || val.trim().toLowerCase() === oldInputVal?.trim().toLowerCase())
       return;
 
+    // check if the search city data is stored or not
+    const inputVal = val.toLowerCase();
+
+    // check if the city data is stored or not older than 10 min 
+    const dataStatus = calculateTimeDiffrence(storedData, inputVal);
+
+    
+    if (dataStatus === "fresh") {
+      dispatch(setStoredData(storedData[inputVal]));
+      return;
+    } else if (dataStatus === "stale") {
+      dispatch(setRemoveStoredData(inputVal));
+    }
+
     // fetch data after some delay using debouncing
     const handler = setTimeout(async () => {
       dispatch(setLoader(true));
@@ -46,6 +61,7 @@ const SearchBox = () => {
         );
         const data = await res.json();
 
+        // handle error
         if (data.cod == "404") {
           dispatch(setError(data.message));
           return;
@@ -54,6 +70,7 @@ const SearchBox = () => {
         dispatch(setData(data));
       } catch (error) {
         console.log(error);
+        toast.error("SomeThing Went Wrong ! Try After Some Time");
       } finally {
         dispatch(setLoader(false));
       }
@@ -73,9 +90,7 @@ const SearchBox = () => {
           type="text"
           placeholder="Search City"
         />
-        <div
-          className="h-full w-16 bg-blue-500 flex justify-center items-center text-2xl text-white cursor-pointer"
-        >
+        <div className="h-full w-16 bg-blue-500 flex justify-center items-center text-2xl text-white cursor-pointer">
           <CiSearch />
         </div>
       </div>

@@ -16,9 +16,10 @@ const CurrentWeather = () => {
           {data.city}, {data.country}
         </h2>
         <img
-          src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`}
+          src={`https://openweathermap.org/img/wn/${data.weather[0].icon  == '01d' ? '02d' : data.weather[0].icon}@2x.png`}
           alt={data.weather[0].description}
           className="w-20 h-20"
+          
         />
       </div>
 
