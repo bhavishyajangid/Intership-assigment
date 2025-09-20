@@ -8,24 +8,18 @@ const weatherSlice = createSlice({
     loading: true,
     useCurrentLocation: true,
     oldInputVal: null,
+    error: "",
   },
   reducers: {
     setData: (state, action) => {
-      let payload = action.payload;
+      let data = action.payload;
 
-      let data, inputVal;
-      if (payload?.data) {
-        data = payload.data;
-        inputVal = payload.inputVal || null;
-      } else {
-        data = payload; // raw API response
-        inputVal = null;
+      // save previous search city
+      if (data.city.name) {
+        state.oldInputVal = data.city.name;
       }
 
-      if (inputVal) {
-        state.oldInputVal = inputVal;
-      }
-
+      
       state.data = {
         ...data.list[0],
         city: data.city.name,
@@ -37,19 +31,22 @@ const weatherSlice = createSlice({
       );
 
       state.loading = false;
+      state.error = "";
     },
     setUseCurrentLocation: (state) => {
       state.useCurrentLocation = !state.useCurrentLocation;
       state.loading = true;
-      state.inputVal = null;
+      state.error = "";
     },
-    setSearchWeather: (state, action) => {},
     setLoader: (state, action) => {
       state.loading = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
     },
   },
 });
 
-export const { setData, setUseCurrentLocation, setSearchWeather, setLoader } =
+export const { setData, setUseCurrentLocation, setLoader, setError } =
   weatherSlice.actions;
 export default weatherSlice;

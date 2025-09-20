@@ -1,19 +1,20 @@
-import { useEffect, useState } from "react";
-import Loader from "./components/Loader";
-import img from "./assets/background.png";
-import "./App.css";
-import SearchBox from "./components/SearchBox";
-import Forcast from "./components/Forcast";
-import Whether from "./components/Whether";
-import { ToastContainer, toast } from "react-toastify";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import "./App.css";
+import img from "./assets/background.png";
+import {Loader , SearchBox , Weather} from "../import";
 import { setData } from "./store/weatherSlice";
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
+
+
 function App() {
   const dispatch = useDispatch();
 
-  const { loading , useCurrentLocation } = useSelector((state) => state.weatherSlice);
+  const { loading , useCurrentLocation , error } = useSelector((state) => state.weatherSlice);
 
+
+  // fetch user current location weather
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -25,7 +26,6 @@ function App() {
             );
 
             const data = await res.json();
-            console.log(data , 'home');
             
             dispatch(setData(data));
           } catch (error) {
@@ -40,9 +40,7 @@ function App() {
     }
   }, [useCurrentLocation]);
 
-  if (loading) {
-    return <Loader />;
-  }
+  
 
   
   
@@ -54,8 +52,12 @@ function App() {
       >
         <div className="w-full max-w-3xl  min-h-52 rounded-2xl shadow-xl p-5">
           <SearchBox />
-          <Whether />
-          <Forcast />
+ 
+         {/*  show error and loading  */}
+          {
+          error ? <p className="text-xl capitalize font-medium text-gray-500 text-center mt-10">{error}</p> : 
+            loading ? <Loader/> : <Weather/>
+          }
         </div>
       </div>
     </>
