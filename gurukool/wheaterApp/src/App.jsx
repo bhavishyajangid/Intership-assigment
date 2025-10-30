@@ -88,7 +88,7 @@ function App() {
         <div className="w-full max-w-3xl  min-h-52 rounded-2xl shadow-xl p-5">
           <SearchBox />
 
-          {/*  show error and loading  */}
+          {/*  show error and loading  */}x
           {error ? (
             <p className="text-xl capitalize font-medium text-gray-500 text-center mt-10">
               {error}
