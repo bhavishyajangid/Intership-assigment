@@ -3,21 +3,20 @@
 
 
  type headerOptionType = {
-      id  : string
+    id : number,
      label : string,
      className : string,
-     handleOption : (id:kanbanCard['id']) => void
+     handleOption : (id:number  , label : string) => void
  }
 
  type updateCardType = {
-    id: string,
+    id: number | null,
     show : boolean,
-    value : string | number | null,
     field : string | null 
  }
 
  interface kanbanCard {
-     id : string,
+     id : number,
      title : string,
      color : string,
      maxTasks? : number,

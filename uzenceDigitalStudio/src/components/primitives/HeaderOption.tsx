@@ -1,14 +1,14 @@
 import Option from "./Option"
 
 type idType = {
-    id : kanbanCard['id'],
-    handleRename : () =>  void,
-    handleSetWip : () => void
+    id : number,
+    handleRename : (id: number , label : string) =>  void,
+    handleSetWip : (id : number , label : string) => void
 }
 
 const HeaderOption = ({id , handleRename , handleSetWip}:idType) => {
 
-    const HandleDelete = (id:headerOptionType['id']) => {
+    const HandleDelete = () => {
         alert(id)
     }
     
@@ -24,7 +24,7 @@ let headerOption = [
             className : 'text-gray-500',
             handleOption : handleSetWip
         },{
-            id : id,
+           id: id,
             label : 'Delete',
             className : 'text-red-500',
             handleOption : HandleDelete

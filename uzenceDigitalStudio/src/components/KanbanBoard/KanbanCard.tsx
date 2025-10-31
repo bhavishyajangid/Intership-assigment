@@ -6,37 +6,54 @@ import Option from '../primitives/Option';
 import KanbanColumn from './KanbanColumn';
 import { IoAddOutline } from "react-icons/io5";
 import HeaderOption from '../primitives/HeaderOption';
+import { useDispatch } from 'react-redux';
+import { updateCardTitle } from '../../store/allTask';
 type itemType = {
     item : kanbanCard
 }
 
 const KanbanCard = ({item} : itemType) => {
+    
+    
+    const dispatch = useDispatch()
     const [option , setOption] = useState<boolean>(false)
     const [colapse , setColapse] = useState<boolean>(false)
+    const [inputvalTitle , setInputValTitle] = useState<string | number>(item.title)
+    // const [inputvalMaxTask , setInputValMaxTask] = useState<number>(item.maxTasks || 0)
+
     const [updateCard , setUpdateCard] = useState<updateCardType>(
         {
-            id : '',
-            value : item.title,
+            id : null,
             show : false,
             field : ''
         },
-    ) 
+    )
 
 
-    const handleUpdateCard = (id:string , field : string):void => {
-        console.log(id , field);
+    const handleUpdateCard = (id: number , label : string):void => {
+        console.log(id , label);
         
          setUpdateCard({
             id,
-            field,
-            value :  field === 'title' ? item.title : item.maxTasks ?? null ,
-            show : true
+            field : label,
+            show : !updateCard.show
          })
+       
+         setOption(prev => !prev)
     }
 
-    console.log(updateCard);
-    
-    
+        
+    const handleUpdateTitle = (e : React.KeyboardEvent<HTMLTextAreaElement>):void => {
+         if(e.key === 'Enter'){
+          let obj = {
+            ...updateCard,
+            value : inputvalTitle
+          }
+
+             dispatch(updateCardTitle(obj))
+             setUpdateCard({id : null , field : "" , show : false ,})
+         }
+    }
 
 
   return (
@@ -55,17 +72,20 @@ const KanbanCard = ({item} : itemType) => {
            {/* option menu */}
            {
             option && 
-             <HeaderOption id={item.id} handleRename={() => handleUpdateCard(item.id , 'title')} 
-             handleSetWip = {() => handleUpdateCard(item.id , 'maxTasks')}
+             <HeaderOption id={item.id} handleRename={handleUpdateCard} 
+             handleSetWip = {handleUpdateCard}
              />
            }
 
            {/* column header  */}
         <div className='p-3  flex justify-between items-center border-b border-gray-200'>
           <div className='flex gap-2 items-center'>
-          <h1 className='  text-lg  font-bold' style={{color : item.color}}>{item.title} </h1>
+            {
+                (updateCard.show && updateCard.field === 'Rename') ? <textarea onKeyDown={(e) => handleUpdateTitle(e)} value={inputvalTitle} onChange={(e) => setInputValTitle(e.target.value)} className=' border border-black w-28 h-10'></textarea> :  <h1 className='  text-lg  font-bold' style={{color : item.color}}>{item.title} </h1>
+            }
+            
           {
-            item.maxTasks &&
+            item.maxTasks &&  
           <p className='text-sm text-gray-500'>(<span className='text-orange-500'>5</span>/{item.maxTasks})</p>
           }
           </div>

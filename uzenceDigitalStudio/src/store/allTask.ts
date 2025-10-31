@@ -12,11 +12,18 @@ const allTaskSlice = createSlice(({
     reducers : {
        setKanbanCards : (state , action) => {
 
+       },
+       updateCardTitle : (state , action) => {
+        const {id , value , field} = action.payload
+        console.log(action.payload);
+        
+        field === 'Rename' ? state.allCards[id].title = value :
+        state.allCards[id].maxTasks = value
        }
     }
 }))
 
-export const {setKanbanCards} = allTaskSlice.actions
+export const {setKanbanCards , updateCardTitle} = allTaskSlice.actions
 export default allTaskSlice
 
 

@@ -6,6 +6,7 @@ import type {RootState}  from "../../store/index"
 const KanbanBoard = () => {
 
   const {allCards} = useSelector((state:RootState) => state.allTaskSlice)
+console.log(allCards);
 
   return (
     // main container
