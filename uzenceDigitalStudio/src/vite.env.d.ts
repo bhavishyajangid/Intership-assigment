@@ -6,11 +6,11 @@
     id : number,
      label : string,
      className : string,
-     handleOption : (id:number  , label : string) => void
+     handleOption : (id : number , label:string) => void
  }
 
  type updateCardType = {
-    id: number | null,
+    id: string | null | number,
     show : boolean,
     field : string | null 
  }
