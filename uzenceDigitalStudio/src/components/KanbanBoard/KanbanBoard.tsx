@@ -1,20 +1,22 @@
-import { useSelector } from "react-redux"
-import type { RootState } from "../../store/index"
+import { horizontalListSortingStrategy, SortableContext } from "@dnd-kit/sortable"
 import KanbanCard from "./KanbanCard"
 
-const KanbanBoard = () => {
 
-  const {allCards} = useSelector((state:RootState) => state.allTaskSlice)
-  
-
+type props = {
+  card : kanbanCard[]
+}
+const KanbanBoard = ({card} : props) => {
   return (
     // main container
-    <div className='h-[calc(100vh-4rem)] p-5 flex gap-3'>
+    <div className='h-[calc(100vh-4rem)] max-h-screen p-5 flex gap-3'>
+      <SortableContext items={card} strategy={horizontalListSortingStrategy}>
+
       {
-        allCards.map((item) => (
+        card.map((item) => (
           <KanbanCard key={item.id} item={item}/>
         ))
       }
+      </SortableContext>
       
     </div>
   )

@@ -1,9 +1,23 @@
-import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import {CSS} from '@dnd-kit/utilities'
+type props = {
+  task : kanbanTaskColumn,
+  cardIndex : number
+}
+const KanbanColumn = ({task , cardIndex} : props) => {
 
-const KanbanColumn = () => {
-  let i = 0;
+   const {attributes , listeners , setNodeRef , transform , transition}  = useSortable({id : task.id , data : {type : 'task' , cardIndex : cardIndex}})
+const style = {
+    transition,
+    transform : CSS.Transform.toString(transform)
+  }
   return (
-    <div className="w-full min-h-38 border border-gray-200 rounded-md bg-white p-3   shadow-sm relative">
+    <div
+    {...attributes}
+    {...listeners}
+    ref={setNodeRef}
+    style={style}
+     className="w-full min-h-38 border border-gray-200 rounded-md bg-white p-3   shadow-sm relative hover:shadow-2xl hover:scale-105">
       <div className="flex justify-between items-center">
         <h1 className="text-[15px] font-medium font-gray-700 ">Take Shower</h1>
         <span className="px-1.5 py-1 text-white font-medium bg-red-400 text-xs rounded-sm">
@@ -25,11 +39,6 @@ const KanbanColumn = () => {
 
       <div className="flex justify-between items-center absolute bottom-3 w-full   ">
        
-            {/* <img
-                className="w-8 h-8 rounded-full"
-                src="https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE="
-                alt="img"
-            /> */}
           <div className="relative w-full ml-2">
             <span className="text-xs font-semibold text-orange-500">
               Assign To{" "}

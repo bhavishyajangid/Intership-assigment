@@ -1,6 +1,8 @@
 import { memo, useState } from "react";
-import KanbanHeader from "../primitives/KanbanHeader";
+import KanbanCardHeader from "../primitives/KanbanCardHeader";
 import KanbanTask from "./KanbanTask";
+import { horizontalListSortingStrategy, SortableContext, useSortable } from "@dnd-kit/sortable";
+import {CSS} from '@dnd-kit/utilities'
 type itemType = {
   item: kanbanCard;
 };
@@ -8,15 +10,29 @@ type itemType = {
 const KanbanCard = ({ item }: itemType) => {
   const [collapse, setCollapse] = useState<boolean>(false);
 
+  const {attributes , listeners , setNodeRef , transform , transition}  = useSortable({id : item.id , data : {type : 'card'}})
+
+  const style = {
+    transition,
+    transform : CSS.Transform.toString(transform)
+  }
+
   return (
     <>
       <div
-        className={`max-w-[320px] w-full min-w-[220px] h-fit  rounded-md shadow-md overflow-hidden relative z-0 border   `}
-        style={{ borderColor: item.color }}
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style= {style}
+        className={`max-w-[320px] w-full min-w-[220px] h-fit  rounded-md shadow-md overflow-hidden relative z-0 border touch-none  `}
       >
-        <KanbanHeader item={item} setCollapse={setCollapse} />
+        <KanbanCardHeader item={item} setCollapse={setCollapse} />
 
-        {!collapse && <KanbanTask />}
+        {!collapse &&
+             <SortableContext items={item.taskIds} strategy={horizontalListSortingStrategy}>
+               <KanbanTask task={item} />
+             </SortableContext>
+        }
       </div>
     </>
   );

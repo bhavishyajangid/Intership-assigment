@@ -4,7 +4,7 @@ import Option from "./Option"
 import { HiDotsVertical } from "react-icons/hi";
 import { useState } from "react";
 type idType = {
-    id : number,
+    id : kanbanCard['id'],
    setUpdateCard : React.Dispatch<React.SetStateAction<updateCardType>>
 }
 
@@ -13,7 +13,7 @@ const HeaderOption = ({id , setUpdateCard}:idType) => {
     const [option , setOption] = useState<boolean>(false)
 
 
-  const  handleUpdateCard = (id : number , label: string):void => {
+  const  handleUpdateCard = (id : kanbanCard['id'] , label: string):void => {
        setUpdateCard({
         id,
         field  : label,
@@ -23,7 +23,7 @@ const HeaderOption = ({id , setUpdateCard}:idType) => {
        setOption(prev => !prev)
     }
     
-    const HandleDelete = (id: number) => {
+    const HandleDelete = (id: kanbanCard['id']) => {
          dispatch(setDeleteCard(id))
     }
 

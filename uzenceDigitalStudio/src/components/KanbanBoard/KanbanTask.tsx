@@ -1,17 +1,26 @@
 import { memo } from "react";
 import { IoAddOutline } from "react-icons/io5";
 import KanbanColumn from "../primitives/KanbanColumn";
+import { horizontalListSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 
-const KanbanTask = () => {
+type props = {
+   task : kanbanCard
+}
+
+
+const KanbanTask = ({task} : props) => {
 
   return (
     <div
       className={`max-h-[450px]  bg-gray-100 p-3 flex flex-col gap-3 overflow-y-auto hide-scrollbar`}
     >
-      <KanbanColumn />
-      <KanbanColumn />
-      <KanbanColumn />
-      <KanbanColumn />
+      <SortableContext items={task.taskIds} strategy={horizontalListSortingStrategy}>
+        {
+          task?.taskIds?.map((task , i) => (
+            <KanbanColumn task={task} cardIndex={i} key={task.id} />
+          ))
+        }
+      </SortableContext>
 
 
        
