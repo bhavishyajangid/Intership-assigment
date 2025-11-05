@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react';
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import type { RootState } from '../store/store';
 import { useDispatch, useSelector } from 'react-redux';
+import { handleHide } from '../store/AllData';
+import type { RootState } from '../store/store';
 import { getNewColumnVal } from '../utility/getNewColumnVal';
-import { handleHide, setAdditionalColumn } from '../store/AllData';
 
 
 
-type props ={
+type props = {
   item : rowType,
   coloumLen : number
 }
@@ -15,7 +15,6 @@ type props ={
 const Rows = ({item , coloumLen} : props) => {
   const dispatch = useDispatch()
   const [rowVal , setRowVal] = useState<string[]>([])
-  const [hide , setHide] = useState(false)
    const {additionalColumn} = useSelector((state : RootState) => state.allDataSlice)
 
    
@@ -34,8 +33,8 @@ const Rows = ({item , coloumLen} : props) => {
     }, [additionalColumn])
 
 
-    const handleHide = () => {
-       item.hide = !item.hide
+    const toggleHide = (id:rowType['id']) => {
+        dispatch(handleHide(id))
     }
 
 
@@ -47,20 +46,22 @@ const Rows = ({item , coloumLen} : props) => {
     >
       
     <div>
-            <input onChange={() => {handleHide()}} type="checkbox" name="" id="" />
+            <input
+             checked={item.hide}
+             onChange={() => {toggleHide(item.id)}} type="checkbox" name="" id="" />
     </div>
 
 
           
          {
-          item.hide &&
+          !item.hide &&
           rowVal?.map((val , idx) => 
            typeof val !== 'boolean' &&
             <div key={idx}>{val}</div>  
           )
         }
          {
-           item.hide &&    
+           !item.hide &&  
           <div className=' flex justify-center '><HiOutlineDotsVertical/></div>
          }
          
@@ -70,4 +71,10 @@ const Rows = ({item , coloumLen} : props) => {
   )
 }
 
-export default Rows
+export default memo(Rows , (prev , next) => {
+    return (
+      prev.item.hide === next.item.hide &&
+      prev.coloumLen === next.coloumLen &&
+      JSON.stringify(prev.item) === JSON.stringify(next.item)
+    )
+}) 

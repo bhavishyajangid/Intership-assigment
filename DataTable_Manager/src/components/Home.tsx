@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import Rows from "./Rows";
+import { useEffect } from "react";
 
 const Home = () => {
   const { column, filteredRows } = useSelector(
@@ -8,7 +9,8 @@ const Home = () => {
   );
 
 
-  console.log(filteredRows);
+  
+  
   
 
 

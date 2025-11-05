@@ -41,13 +41,7 @@ const HeaderOption = () => {
     setShowSort((pre) => !pre);
   };
 
-  // let option = [
-  //   {
-  //     label: "Add",
-  //     icons: <IoAddOutline />,
-  //     handleOption: () => setShowAddColumn((prev) => !prev),
-  //   },
-  // ];
+
 
   useEffect(() => {
     const handler = setTimeout(() => {
