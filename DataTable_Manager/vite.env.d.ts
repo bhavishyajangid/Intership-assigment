@@ -13,5 +13,15 @@ type rowType = {
 interface DataState {
     column : string[],
     additionalColumn : string[],
-    rows : rowType[]
+    rows : rowType[],
+    filteredRows : rowType[],
+    rowPerPage : number,
+    searchval : string,
+    searchResult : rowType[]
+}
+
+
+type paginationPayloadType = {
+     data : rowType[],
+     currentPage : number
 }

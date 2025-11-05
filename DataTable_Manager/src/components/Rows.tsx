@@ -3,7 +3,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import type { RootState } from '../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { getNewColumnVal } from '../utility/getNewColumnVal';
-import { setAdditionalColumn } from '../store/AllData';
+import { handleHide, setAdditionalColumn } from '../store/AllData';
 
 
 
@@ -13,12 +13,16 @@ type props ={
 }
 
 const Rows = ({item , coloumLen} : props) => {
- const dispatch = useDispatch()
-  const [rowVal , setRowVal] = useState<string[]>(Object.values(item))
-
-  console.log(rowVal);
-  
+  const dispatch = useDispatch()
+  const [rowVal , setRowVal] = useState<string[]>([])
+  const [hide , setHide] = useState(false)
    const {additionalColumn} = useSelector((state : RootState) => state.allDataSlice)
+
+   
+   useEffect(() => {
+      setRowVal(Object.values(item))
+   }, [item])
+
 
    useEffect(() => {
      
@@ -29,10 +33,11 @@ const Rows = ({item , coloumLen} : props) => {
     
     }, [additionalColumn])
 
-    rowVal.map((val) => {
-      console.log(val);
-      
-    })
+
+    const handleHide = () => {
+       item.hide = !item.hide
+    }
+
 
   return (
     <>
@@ -40,19 +45,26 @@ const Rows = ({item , coloumLen} : props) => {
     className='grid gap-5 text-center py-4 text-gray-900 hover:bg-gray-300 transition cursor-pointer border-b border-gray-200'
       style={{gridTemplateColumns : `80px 60px repeat(${coloumLen-1} , minmax(0 , 1fr)) 60px`}}
     >
+      
     <div>
-            <input type="checkbox" name="" id="" />
+            <input onChange={() => {handleHide()}} type="checkbox" name="" id="" />
     </div>
 
 
           
          {
+          item.hide &&
           rowVal?.map((val , idx) => 
            typeof val !== 'boolean' &&
             <div key={idx}>{val}</div>  
           )
+        }
+         {
+           item.hide &&    
+          <div className=' flex justify-center '><HiOutlineDotsVertical/></div>
          }
-         <div className=' flex justify-center '><HiOutlineDotsVertical/></div>
+         
+         
     </div>
     </>
   )
