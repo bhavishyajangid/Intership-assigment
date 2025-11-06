@@ -13,10 +13,13 @@ interface Pagination {
     offset : number
     total : number
      total_pages : number
+     limit : number
+     next_url : string
 }
 
 
 interface StoreType  {
     tableData : TableData[]
     pagination : Pagination | null
+    currentPage : number
 }
