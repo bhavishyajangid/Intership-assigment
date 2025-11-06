@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: DataState = {
-  column: ["Hide", "Sr", "Name", "Email", "Age", "Role"],
+  column: [],
   additionalColumn: [],
   rows: [],
   filteredRows: [],
@@ -16,11 +16,36 @@ const allDataSlice = createSlice({
   reducers: {
 
     setRows : (state , action) => {
-     state.rows = action.payload
+      const importedRows = action.payload
+      
+      state.rows = importedRows
+      const columnVal = Object.keys(importedRows[0] || {}).filter(
+        key => key !== 'id' && key !== 'hide'
+      )
+      
+  
+     state.column = columnVal
+
+     let end = 1 * state.rowPerPage;
+     let start = end - state.rowPerPage;
+     state.filteredRows = action.payload.slice(start, end);
+     localStorage.setItem('allRows' , JSON.stringify(action.payload))
     },
     setAddColumn: (state, action: PayloadAction<string>) => {
-      state.column.push(action.payload);
-      state.additionalColumn.push(action.payload);
+      const newColVal = action.payload
+      state.column.push(newColVal)
+      state.filteredRows = state.filteredRows.map(row => ({
+        ...row,
+        [newColVal] : row[newColVal] ? row[newColVal] : "-"
+      }))
+
+      const allRowsUpdate = state.rows.map(row => ({
+        ...row,
+        [newColVal] : row[newColVal] ? row[newColVal] : "-"
+      }))
+     
+      state.rows = allRowsUpdate
+      localStorage.setItem('allRows' , JSON.stringify(allRowsUpdate))
     },
     setAdditionalColumn: (state) => {
       state.additionalColumn = [];

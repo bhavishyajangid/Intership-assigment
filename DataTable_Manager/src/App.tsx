@@ -1,24 +1,20 @@
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import "./App.css";
 import HeaderOption from "./components/HeaderOption";
 import Home from "./components/Home";
-import Pagination from "./components/Pagination";
-import { dummyData } from "./data";
-import { useDispatch } from "react-redux";
-import { handlePagination, setRows } from "./store/AllData";
-import { current } from "@reduxjs/toolkit";
+import Pagination from "./components/Footer";
+import { setRows } from "./store/AllData";
 
 const App = () => {
    const dispatch = useDispatch()
+
+   // take data from localstorage
   useEffect(() => {
     let rowData = JSON.parse(localStorage.getItem("allRows") || 'null')
-    if(!rowData || rowData.length === 0){
-      rowData = dummyData
-      localStorage.setItem('allRows' , JSON.stringify(dummyData))
+    if(rowData || rowData?.length > 0){
+     dispatch(setRows(rowData))
     }
-
-      dispatch(setRows(rowData))
-      dispatch(handlePagination({currentPage : 1 , data : rowData}))
   }, [dispatch])
 
   return (

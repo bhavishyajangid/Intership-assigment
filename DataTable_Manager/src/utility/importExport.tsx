@@ -1,5 +1,3 @@
-import { rejects } from 'assert'
-import { error } from 'console'
 import Papa from 'papaparse'
 
 
@@ -8,10 +6,10 @@ export const parseCSV = (file:File) => {
         Papa.parse(file , {
             header : true,
             skipEmptyLines : true,
-            complete : (results) => {
+            complete : (results : Papa.ParseResult<any>) => {
                 resolve(results.data as any[])
             },
-            error : (err) => {
+            error : (err:Error) => {
                 reject(err)
             }
         })

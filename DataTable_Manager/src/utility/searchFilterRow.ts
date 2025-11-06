@@ -1,4 +1,4 @@
-export const filterRow = (rows : rowType , searchVal : string) => {
+export const filterRow = (rows : rowType[] , searchVal : string) => {
     if(!searchVal.trim()) return rows
 
 

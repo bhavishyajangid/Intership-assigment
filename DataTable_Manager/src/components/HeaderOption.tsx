@@ -1,26 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FcNumericalSorting12, FcNumericalSorting21 } from "react-icons/fc";
 import { IoAddOutline } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handlePagination,
   setAddColumn,
   setSearchVal,
-  setSort
+  setSort,
 } from "../store/AllData";
 import type { RootState } from "../store/store";
 import { filterRow } from "../utility/searchFilterRow";
+
+
+
 const HeaderOption = () => {
-  const { searchval } = useSelector((state: RootState) => state.allDataSlice);
+  const dispatch = useDispatch();
+  const { searchval , rows } = useSelector((state: RootState) => state.allDataSlice);
   const [showAddColumn, setShowAddColumn] = useState(false);
   const columnName = useRef<HTMLInputElement>(null);
   const [showSort, setShowSort] = useState<boolean>(false);
-  // const [searchVal , setSearchVal] = useState<string>('')
   const firstRender = useRef<boolean>(true);
-  const dispatch = useDispatch();
 
-  const { rows } = useSelector((state: any) => state.allDataSlice);
 
+    // handle Add New Column
   const handleAdd = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
       const value = columnName.current?.value.trim();
@@ -36,6 +39,7 @@ const HeaderOption = () => {
     }
   };
 
+   // handle Sort
   const handleSort = (type: string): void => {
     dispatch(setSort(type));
     setShowSort((pre) => !pre);
@@ -54,7 +58,9 @@ const HeaderOption = () => {
         dispatch(handlePagination({ currentPage: 1, data: rows }));
         return;
       }
+ 
 
+      // filter row according to seachval
       const filter = filterRow(rows, searchval);
       dispatch(handlePagination({ currentPage: 1, data: filter }));
     }, 500);
@@ -64,6 +70,8 @@ const HeaderOption = () => {
 
   return (
     <div className="p-5 flex justify-between items-center relative">
+
+      {/* // search Input  */}
       <input
         value={searchval}
         onChange={(e) => dispatch(setSearchVal(e.target.value))}
@@ -72,15 +80,22 @@ const HeaderOption = () => {
         placeholder="Search"
       />
 
+    {/* // add Btn  */}
       <div className="flex gap-4">
         {showAddColumn ? (
-          <input
-            ref={columnName}
-            onKeyDown={handleAdd}
-            className="px-4 bg-white h-9 rounded-4xl border border-gray-500 outline-none placeholder:text-sm"
-            type="text"
-            placeholder="Enter Column Name"
-          />
+          <div className="px-4 bg-white h-9 rounded-4xl border border-gray-500 flex items-center">
+            <input
+              ref={columnName}
+              onKeyDown={handleAdd}
+              className="outline-none placeholder:text-sm"
+              type="text"
+              placeholder="Enter Column Name"
+            />
+            <RxCross2
+              onClick={() => setShowAddColumn((prev) => !prev)}
+              className="ml-2 cursor-pointer"
+            />
+          </div>
         ) : (
           <div
             onClick={() => setShowAddColumn((prev) => !prev)}
@@ -91,6 +106,7 @@ const HeaderOption = () => {
           </div>
         )}
 
+        {/* // sort Btn  */}
         <div
           onClick={() => setShowSort((prev) => !prev)}
           className="px-5 py-2 rounded-md border cursor-pointer border-gray-500 font-medium flex items-center gap-2 h-10"
