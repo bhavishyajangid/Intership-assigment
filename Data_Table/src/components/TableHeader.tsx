@@ -1,32 +1,18 @@
-import React from 'react'
-import { MdKeyboardArrowDown } from "react-icons/md";
+import {useSelector } from "react-redux";
+import type { RootState } from "../store/store";
 const TableHeader = () => {
-    let tableHeaderField = ['Title' , 'Place_of_Origin' , "Artist_Display" ,'Inscriptions', "Date_Start" , 'Date_End' ]
+  const { selectedRow, extraSelectedRow } = useSelector(
+    (state: RootState) => state.tableDataSlice
+  );
   return (
-    <div className='py-5 bg-gray-300 px-4 grid'
-    style={{
-          gridTemplateColumns: `80px repeat(${
-           6
-          } , minmax(0 , 1fr))`,
-        }}
-    >
+    <p className="text-gray-500 text-sm font-medium ml-4 py-2">
+      Selected :{" "}
+      <span className="text-blue-500">
+        {selectedRow.length + extraSelectedRow.count}
+      </span>{" "}
+      Rows
+    </p>
+  );
+};
 
-        {/* // checkbox  */}
-        <div className='flex gap-2 items-center' >
-            <input type="checkbox" name="chekbox" id="" />
-            <MdKeyboardArrowDown  className='text-gray-700'/>
-        </div>
-
-
-       {/* tableHeaderField */}
-        {
-            tableHeaderField.map((item ,idx) => (
-                <span key={idx} className='text-sm font-medium text-gray-700'>{item}</span>
-            ))
-        }
-
-    </div>
-  )
-}
-
-export default TableHeader
+export default TableHeader;
